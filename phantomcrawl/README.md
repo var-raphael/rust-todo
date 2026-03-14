@@ -38,18 +38,36 @@ Each layer falls back to the next automatically. Most sites never leave Layer 1.
 Download the pre-built binary for your platform from [GitHub Releases](https://github.com/var-raphael/PhantomCrawl/releases):
 
 ```bash
-# Linux
+# Linux (64-bit)
 wget https://github.com/var-raphael/PhantomCrawl/releases/latest/download/phantomcrawl-linux-amd64
 chmod +x phantomcrawl-linux-amd64
-mv phantomcrawl-linux-amd64 phantomcrawl
+sudo mv phantomcrawl-linux-amd64 /usr/local/bin/phantomcrawl
+
+# Linux ARM / Android Termux
+wget https://github.com/var-raphael/PhantomCrawl/releases/latest/download/phantomcrawl-linux-arm64
+chmod +x phantomcrawl-linux-arm64
+mv phantomcrawl-linux-arm64 $PREFIX/bin/phantomcrawl
 
 # Mac (Apple Silicon)
 wget https://github.com/var-raphael/PhantomCrawl/releases/latest/download/phantomcrawl-darwin-arm64
 chmod +x phantomcrawl-darwin-arm64
-mv phantomcrawl-darwin-arm64 phantomcrawl
+sudo mv phantomcrawl-darwin-arm64 /usr/local/bin/phantomcrawl
+
+# Mac (Intel)
+wget https://github.com/var-raphael/PhantomCrawl/releases/latest/download/phantomcrawl-darwin-amd64
+chmod +x phantomcrawl-darwin-amd64
+sudo mv phantomcrawl-darwin-amd64 /usr/local/bin/phantomcrawl
 
 # Windows
 # Download phantomcrawl-windows-amd64.exe from releases
+# Move it to a folder in your PATH, e.g. C:\Windows\System32\
+# Or add its folder to your PATH environment variable
+```
+
+Once installed, run from anywhere:
+```bash
+phantomcrawl init
+phantomcrawl start
 ```
 
 ### Build From Source
@@ -276,10 +294,13 @@ BSL (Business Source License) - free for personal and non-commercial use. See [L
 
 Built by **Raphael Samuel**, 18, Lagos, Nigeria.
 
-Self-taught. No bootcamp, no degree, just code.
+Self-taught. Started coding on a phone. No bootcamp, no degree, just code.
 
 - Portfolio: [var-raphael.vercel.app](https://var-raphael.vercel.app)
 - GitHub: [github.com/var-raphael](https://github.com/var-raphael)
+
+> *"The kid from Nigeria who built a better Firecrawl."*
+
 ---
 
 *If PhantomCrawl helped you, star the repo ⭐*
