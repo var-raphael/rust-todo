@@ -1,0 +1,17 @@
+{
+  "cleaned": "Example Domain\nThis domain is for use in documentation examples without needing permission. Avoid use in operations.",
+  "crawled_at": "2026-03-13T19:18:39.396250123Z",
+  "documents": null,
+  "emails": null,
+  "images": null,
+  "links": [
+    "https://iana.org/domains/example"
+  ],
+  "metadata": {
+    "viewport": "width=device-width, initial-scale=1"
+  },
+  "phones": null,
+  "title": "Example Domain",
+  "url": "https://example.com",
+  "videos": null
+}

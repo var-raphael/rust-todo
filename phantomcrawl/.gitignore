@@ -1,0 +1,32 @@
+# Environment & secrets
+.env
+
+# Crawl config & data (user-generated)
+crawl.json
+urls.txt
+scraped/
+
+
+# Go build artifacts
+*.exe
+*.test
+*.out
+/phantomcrawl
+/phantomcrawl-linux-amd64
+/phantomcrawl-linux-arm64
+/phantomcrawl-darwin-amd64
+/phantomcrawl-darwin-arm64
+/phantomcrawl-windows-amd64.exe
+
+
+# State database
+.phantomcrawl/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db

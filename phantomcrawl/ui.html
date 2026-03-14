@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhantomCrawl — Config Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+<style>
+  :root {
+    --bg: #080a08;
+    --bg2: #0d110d;
+    --bg3: #111611;
+    --green: #00ff41;
+    --green-dim: #00cc33;
+    --green-faint: #003311;
+    --amber: #ffb300;
+    --red: #ff3333;
+    --border: #1a2e1a;
+    --text: #c8e6c8;
+    --text-dim: #557755;
+    --scan: rgba(0,255,65,0.03);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--scan) 2px, var(--scan) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 28px;
+    background: var(--bg2);
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+
+  .logo {
+    font-family: 'Orbitron', monospace;
+    font-weight: 900;
+    font-size: 16px;
+    color: var(--green);
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px var(--green), 0 0 40px rgba(0,255,65,0.2);
+  }
+
+  .logo-sub { color: var(--text-dim); font-size: 11px; letter-spacing: 1px; }
+
+  main { max-width: 840px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  .notice {
+    border: 1px solid rgba(255,179,0,0.25);
+    background: rgba(255,179,0,0.04);
+    color: var(--amber);
+    padding: 10px 14px;
+    font-size: 11px;
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 18px;
+    margin-bottom: 16px;
+  }
+
+  .card-title {
+    color: var(--green);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+  .form-grid.full { grid-template-columns: 1fr; }
+  .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+
+  label { color: var(--text-dim); font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  input, textarea, select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    padding: 8px 10px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--green-dim); }
+  select option { background: var(--bg3); }
+  textarea { resize: vertical; }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 10px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .toggle-label { font-size: 12px; }
+  .toggle-sub { color: var(--text-dim); font-size: 10px; margin-top: 2px; }
+
+  .switch { position: relative; width: 34px; height: 18px; cursor: pointer; flex-shrink: 0; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider { position: absolute; inset: 0; background: var(--bg); border: 1px solid var(--border); transition: 0.2s; }
+  .slider::before { content: ''; position: absolute; width: 10px; height: 10px; left: 3px; bottom: 3px; background: var(--text-dim); transition: 0.2s; }
+  input:checked + .slider { background: var(--green-faint); border-color: var(--green-dim); }
+  input:checked + .slider::before { transform: translateX(16px); background: var(--green); }
+
+  .keys-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+  .key-row { display: flex; gap: 6px; }
+  .key-row input { flex: 1; }
+
+  .btn-remove {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--red);
+    cursor: pointer;
+    padding: 8px 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: border-color 0.15s;
+  }
+  .btn-remove:hover { border-color: var(--red); }
+
+  .btn-add {
+    background: transparent;
+    border: 1px dashed var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    padding: 7px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    width: 100%;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+  }
+  .btn-add:hover { border-color: var(--green-dim); color: var(--green); }
+
+  .hint { color: var(--text-dim); font-size: 10px; line-height: 1.5; }
+
+  .btn-row { display: flex; gap: 12px; margin-top: 28px; }
+
+  .btn {
+    background: var(--green-faint);
+    border: 1px solid var(--green-dim);
+    color: var(--green);
+    cursor: pointer;
+    padding: 13px 28px;
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: rgba(0,255,65,0.12); box-shadow: 0 0 18px rgba(0,255,65,0.15); }
+  .btn:active { transform: scale(0.98); }
+
+  .btn.secondary {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-dim);
+  }
+  .btn.secondary:hover { border-color: var(--text-dim); color: var(--text); box-shadow: none; }
+
+  @media (max-width: 600px) {
+    .form-grid, .form-grid.three { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PHANTOMCRAWL</div>
+  <div class="logo-sub">// config generator</div>
+</header>
+
+<main>
+
+  <div class="notice">
+    Fill out the form → click <strong>Download Files</strong> → move <code>crawl.json</code> and <code>urls.txt</code> to your PhantomCrawl directory → run <code>go run main.go start</code>
+  </div>
+
+  <div class="card">
+    <div class="card-title">// Seed URLs</div>
+    <div class="field">
+      <label>URLs (one per line)</label>
+      <textarea id="urls" rows="5" placeholder="https://example.com&#10;https://news.ycombinator.com&#10;https://react.dev"></textarea>
+      <div class="hint">Saved to urls.txt alongside crawl.json</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">// Crawl Settings</div>
+    <div class="form-grid three">
+      <div class="field">
+        <label>Batch Size</label>
+        <input type="number" id="batch_size" value="3" min="1" max="50">
+      </div>
+      <div class="field">
+        <label>Throttle (seconds)</label>
+        <input type="number" id="throttle" value="5" min="0">
+      </div>
+      <div class="field">
+        <label>Depth</label>
+        <input type="number" id="depth" value="0" min="0">
+        <div class="hint">0 = seed URLs only</div>
+      </div>
+      <div class="field">
+        <label>Depth Limit</label>
+        <input type="number" id="depth_limit" value="10" min="0">
+        <div class="hint">Max links per parent. 0 = unlimited</div>
+      </div>
+    </div>
+    <div class="form-grid full" style="margin-bottom:10px">
+      <div class="field">
+        <label>Output Directory</label>
+        <input type="text" id="output" value="~/phantomcrawl/scraped">
+      </div>
+    </div>
+    <div class="toggle-row">
+      <div>
+        <div class="toggle-label">Stay on Domain</div>
+        <div class="toggle-sub">Only follow links within the seed domain when depth &gt; 0</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="stay_on_domain" checked><span class="slider"></span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">// Scrape Options</div>
+    <div class="toggle-row">
+      <div><div class="toggle-label">Extract Text</div></div>
+      <label class="switch"><input type="checkbox" id="scrape_text" checked><span class="slider"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-label">Extract Links</div></div>
+      <label class="switch"><input type="checkbox" id="scrape_links" checked><span class="slider"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-label">Extract Metadata</div></div>
+      <label class="switch"><input type="checkbox" id="scrape_metadata" checked><span class="slider"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-label">Extract Emails</div></div>
+      <label class="switch"><input type="checkbox" id="scrape_emails"><span class="slider"></span></label>
+    </div>
+    <div class="toggle-row">
+      <div><div class="toggle-label">Extract Phone Numbers</div></div>
+      <label class="switch"><input type="checkbox" id="scrape_phones"><span class="slider"></span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">// AI Cleaning</div>
+    <div class="toggle-row" style="margin-bottom:16px">
+      <div>
+        <div class="toggle-label">Enable AI Cleaning</div>
+        <div class="toggle-sub">Strip boilerplate and extract clean text via LLM</div>
+      </div>
+      <label class="switch"><input type="checkbox" id="ai_enabled" checked onchange="toggleAI()"><span class="slider"></span></label>
+    </div>
+
+    <div id="ai-fields">
+      <div class="form-grid">
+        <div class="field">
+          <label>Provider</label>
+          <select id="ai_provider" onchange="updateModel()">
+            <option value="groq">Groq</option>
+            <option value="openai">OpenAI</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Model</label>
+          <input type="text" id="ai_model" value="llama-3.3-70b-versatile">
+        </div>
+        <div class="field">
+          <label>Key Rotation</label>
+          <select id="ai_key_rotation">
+            <option value="random">Random</option>
+            <option value="round-robin">Round Robin</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Max Concurrent Cleans</label>
+          <input type="number" id="ai_max_concurrent" value="1" min="1" max="10">
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:14px">
+        <label>AI Keys</label>
+        <div class="hint" style="margin-bottom:8px">Reference your .env file with $VAR_NAME, or paste a key directly</div>
+        <div class="keys-list" id="ai-keys-list">
+          <div class="key-row">
+            <input type="text" placeholder="$GROQ_KEY_1">
+            <button class="btn-remove" onclick="removeKey(this)"><i class="ph ph-x"></i></button>
+          </div>
+        </div>
+        <button class="btn-add" onclick="addKey('ai-keys-list')"><i class="ph ph-plus"></i> add key</button>
+      </div>
+
+      <div class="field">
+        <label>Cleaning Prompt</label>
+        <textarea id="ai_prompt" rows="5">You are a web content extractor. You will receive extracted text from a webpage. Your job:
+1. Remove nav menus, footers, cookie banners, and boilerplate
+2. Extract only meaningful content: headings, paragraphs, lists
+3. Return plain text only — no HTML, no JSON, no commentary
+4. If the page has no meaningful content, return: NO_CONTENT
+Return only the extracted text. No commentary, no notes, no explanations.</textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">// Layer 3 — Headless Browser</div>
+    <div class="hint" style="margin-bottom:14px">
+      Used automatically for JS-heavy pages when Layer 1 returns no meaningful content. If Chrome is installed locally, go-rod is used. Otherwise Browserless API keys are required.
+    </div>
+    <div class="field">
+      <label>Browserless Keys</label>
+      <div class="keys-list" id="l3-keys-list">
+        <div class="key-row">
+          <input type="text" placeholder="$BROWSERLESS_KEY_1">
+          <button class="btn-remove" onclick="removeKey(this)"><i class="ph ph-x"></i></button>
+        </div>
+      </div>
+      <button class="btn-add" onclick="addKey('l3-keys-list')"><i class="ph ph-plus"></i> add key</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">// API</div>
+    <div class="form-grid">
+      <div class="field">
+        <label>Port</label>
+        <input type="number" id="api_port" value="4000">
+      </div>
+      <div style="display:flex;align-items:flex-end;padding-bottom:1px">
+        <div class="toggle-row" style="margin:0;flex:1">
+          <div><div class="toggle-label">Enable Stream Endpoint</div></div>
+          <label class="switch"><input type="checkbox" id="api_stream" checked><span class="slider"></span></label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="downloadFiles()"><i class="ph ph-download-simple"></i> Download Files</button>
+    <button class="btn secondary" onclick="resetForm()"><i class="ph ph-arrow-counter-clockwise"></i> Reset</button>
+  </div>
+
+</main>
+
+<script>
+  function toggleAI() {
+    const on = document.getElementById('ai_enabled').checked;
+    const fields = document.getElementById('ai-fields');
+    fields.style.opacity = on ? '1' : '0.35';
+    fields.style.pointerEvents = on ? 'auto' : 'none';
+  }
+
+  function updateModel() {
+    const provider = document.getElementById('ai_provider').value;
+    const model = document.getElementById('ai_model');
+    if (provider === 'openai' && model.value === 'llama-3.3-70b-versatile') {
+      model.value = 'gpt-4o-mini';
+    } else if (provider === 'groq' && model.value === 'gpt-4o-mini') {
+      model.value = 'llama-3.3-70b-versatile';
+    }
+  }
+
+  function addKey(listId) {
+    const list = document.getElementById(listId);
+    const row = document.createElement('div');
+    row.className = 'key-row';
+    row.innerHTML = `<input type="text" placeholder="$ENV_VAR or key..."><button class="btn-remove" onclick="removeKey(this)"><i class="ph ph-x"></i></button>`;
+    list.appendChild(row);
+  }
+
+  function removeKey(btn) {
+    const list = btn.closest('.keys-list');
+    if (list.querySelectorAll('.key-row').length > 1) btn.closest('.key-row').remove();
+  }
+
+  function getKeys(listId) {
+    return Array.from(document.querySelectorAll(`#${listId} input`))
+      .map(i => i.value.trim()).filter(Boolean);
+  }
+
+  function buildConfig() {
+    return {
+      urls_file: './urls.txt',
+      batch_size: parseInt(document.getElementById('batch_size').value) || 3,
+      throttle: parseInt(document.getElementById('throttle').value) || 5,
+      depth: parseInt(document.getElementById('depth').value) || 0,
+      depth_limit: parseInt(document.getElementById('depth_limit').value) || 0,
+      stay_on_domain: document.getElementById('stay_on_domain').checked,
+      format: 'json',
+      output: document.getElementById('output').value || '~/phantomcrawl/scraped',
+      retry: { max_attempts: 3, backoff: 'exponential', respect_retry_after: true },
+      scrape: {
+        text: document.getElementById('scrape_text').checked,
+        links: document.getElementById('scrape_links').checked,
+        images: 'links_only',
+        videos: 'links_only',
+        documents: 'links_only',
+        emails: document.getElementById('scrape_emails').checked,
+        phone_numbers: document.getElementById('scrape_phones').checked,
+        metadata: document.getElementById('scrape_metadata').checked,
+      },
+      ai: {
+        enabled: document.getElementById('ai_enabled').checked,
+        save_raw: true,
+        save_cleaned: true,
+        prompt: document.getElementById('ai_prompt').value,
+        model: document.getElementById('ai_model').value || 'llama-3.3-70b-versatile',
+        provider: document.getElementById('ai_provider').value,
+        key_rotation: document.getElementById('ai_key_rotation').value,
+        keys: getKeys('ai-keys-list'),
+        max_concurrent_cleans: parseInt(document.getElementById('ai_max_concurrent').value) || 1,
+      },
+      layer3: {
+        key_rotation: 'random',
+        keys: getKeys('l3-keys-list'),
+      },
+      api: {
+        port: parseInt(document.getElementById('api_port').value) || 4000,
+        stream: document.getElementById('api_stream').checked,
+      },
+      anti_bot: {
+        rotate_user_agents: true,
+        request_delay_jitter: true,
+        proxy: { enabled: false, key_rotation: 'random', urls: [] },
+        captcha_solver: { enabled: false, provider: '2captcha', key_rotation: 'random', keys: [] },
+      },
+    };
+  }
+
+  function dlFile(filename, content, type) {
+    const blob = new Blob([content], { type });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function downloadFiles() {
+    const urlsList = document.getElementById('urls').value.trim()
+      .split('\n').map(u => u.trim()).filter(Boolean);
+
+    if (!urlsList.length) { alert('Add at least one URL.'); return; }
+
+    dlFile('crawl.json', JSON.stringify(buildConfig(), null, 2), 'application/json');
+    dlFile('urls.txt', urlsList.join('\n'), 'text/plain');
+  }
+
+  function resetForm() {
+    if (confirm('Reset all fields?')) location.reload();
+  }
+</script>
+</body>
+</html>
